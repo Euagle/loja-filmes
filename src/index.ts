@@ -1,7 +1,8 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { db } from './baseDatabase/knex'
+import { db } from './database/knex'
+import { FilmesRouter } from './routes/FilmesRouter'
 
 
 
@@ -17,23 +18,4 @@ app.listen(Number(process.env.PORT), () => {
 })
 
 
-app.get('/filmes', async (req: Request, res: Response) => {
-    try {
-
-        const getFilmes = req.query.q as string | undefined
-
-        if (getFilmes === undefined) {
-            const result = await db.raw(`SELECT * FROM filmes`)
-            res.status(200).send(result)
-        }
-
-
-    } catch (error: any) {
-        console.log(error)
-
-        if (res.statusCode === 200) {
-            res.status(500)
-        }
-        if (error instanceof Error) {
-            res.send(error.message)
-        }}})
+app.use('/filmes', FilmesRouter) 

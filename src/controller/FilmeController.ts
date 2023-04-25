@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
-import { FilmesDatabase } from "../database/filmesDatabase"
+import { TFilmes } from "../types"
+import { Filmes } from "../models/Filmes"
+import { FilmesBusiness } from "../business/FilmesBusiness"
 
 export class FilmesController {
     constructor() {
@@ -10,11 +12,21 @@ export class FilmesController {
 public getFilmes = async (req: Request, res: Response) => {
     try {
 
-        const getFilmes = req.query.q as string | undefined
+        const input= { 
+            q : req.query.q 
 
-        const filmesDatabase = new FilmesDatabase()
-        const result = await filmesDatabase.findFilmes(q)
+        }
 
+        const filmesBusiness = new FilmesBusiness()
+        const result = await filmesBusiness.getFilmes(input)
+
+        
+        // const filmes : TFilmes[] = result.map((resultFilmes) => new Filmes(
+        //     resultFilmes.id,
+        //     resultFilmes.name,
+        //     resultFilmes.category,
+        // ))   
+        res.status(200).send(result) 
         // if (getFilmes === undefined) {
         //     const result = await FilmesDatabase
         //     res.status(200).send(result)
